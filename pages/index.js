@@ -1,13 +1,12 @@
-import Layout from "@/components/Layout";
-import { API_URL } from "@/config/index";
-import EventItem from "@/components/EventItem";
 import Link from "next/link";
+import Layout from "@/components/Layout";
+import EventItem from "@/components/EventItem";
+import { API_URL } from "@/config/index";
 
-const Home = ({ events }) => {
-  console.log("events", events);
+export default function HomePage({ events }) {
   return (
     <Layout>
-      <h1>Home : upcoming events </h1>
+      <h1>Upcoming Events</h1>
       {events.length === 0 && <h3>No events to show</h3>}
 
       {events.map((evt) => (
@@ -21,16 +20,14 @@ const Home = ({ events }) => {
       )}
     </Layout>
   );
-};
-
-export default Home;
+}
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/events`);
+  const res = await fetch(`${API_URL}/events?_sort=date:ASC&_limit=3`);
   const events = await res.json();
-  console.log("events: ", events);
+
   return {
-    props: { events: events.slice(0, 3) },
+    props: { events },
     revalidate: 1,
   };
 }
